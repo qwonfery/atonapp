@@ -1,0 +1,57 @@
+{% load static %}
+<!-- templates/client_list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Client List</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <h1>Список клиентов</h1>
+        <table class="table table-bordered">
+            <tr>
+                <th>Номер счета</th>
+                <th>Фамилия</th>
+                <th>Имя</th>
+                <th>Отчество</th>
+                <th>Дата рождения</th>
+                <th>ИНН</th>
+                <th>ФИО ответственного</th>
+                <th>Статус</th>
+            </tr>
+            {% for client in clients %}
+                <tr>
+                    <td>{{ client.account_number }}</td>
+                    <td>{{ client.last_name }}</td>
+                    <td>{{ client.first_name }}</td>
+                    <td>{{ client.middle_name }}</td>
+                    <td>{{ client.date_of_birth }}</td>
+                    <td>{{ client.inn }}</td>
+                    <td>{{ client.responsible_person }}</td>
+                    <td>
+                        <form class="status-form" data-client-id={{ client.id }}>
+                            {% csrf_token %}
+                            <select name="status">
+                                {% for value, display in client.ACCOUNT_STATUS_CHOICES %}
+                                    <option value="{{ value }}"
+                                            {% if client.status == value %}selected{% endif %}>{{ display }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+</div>
+
+<script src="{% static 'clients/js/status-form-handler.js' %}"></script>
+
+</body>
+</html>
